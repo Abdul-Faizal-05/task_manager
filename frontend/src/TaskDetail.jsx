@@ -174,18 +174,18 @@ function TaskDetail() {
 
   if (!task) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-none h-12 w-12 border-b-2 border-black"></div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-white">
       {/* Chat Section - Left Side */}
-      <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
+      <div className="w-1/3 bg-white border-r-2 border-black flex flex-col">
         {/* Header */}
-        <div className="p-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        <div className="p-4 bg-black text-white">
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-2 mb-3 hover:opacity-80 transition-opacity"
@@ -200,19 +200,17 @@ function TaskDetail() {
         </div>
 
         {/* Task Info */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-4 border-b-2 border-gray-200">
           <div className="flex items-center gap-2 mb-2">
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-              task.priority === 'high' ? 'bg-red-100 text-red-700' :
-              task.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-              'bg-green-100 text-green-700'
-            }`}>
+            <span className={`px-3 py-1 rounded-none text-xs font-semibold border ${task.priority === 'high' ? 'bg-black text-white border-black' :
+                task.priority === 'medium' ? 'bg-gray-600 text-white border-gray-600' :
+                  'bg-gray-200 text-black border-gray-400'
+              }`}>
               {task.priority}
             </span>
-            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-              task.status === 'completed' ? 'bg-green-100 text-green-800' :
-              'bg-yellow-100 text-yellow-800'
-            }`}>
+            <span className={`px-3 py-1 rounded-none text-xs font-semibold border ${task.status === 'completed' ? 'bg-gray-200 text-black border-black' :
+                'bg-gray-100 text-gray-800 border-gray-400'
+              }`}>
               {task.status}
             </span>
           </div>
@@ -224,15 +222,15 @@ function TaskDetail() {
         </div>
 
         {/* Team Members */}
-        <div className="p-4 border-b border-gray-200">
-          <h3 className="text-sm font-semibold text-gray-700 mb-2">Team Members</h3>
+        <div className="p-4 border-b-2 border-gray-200">
+          <h3 className="text-sm font-semibold text-black mb-2">Team Members</h3>
           <div className="flex flex-wrap gap-2">
             {task.members?.map((member, idx) => (
-              <div key={idx} className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center text-white text-xs font-semibold">
+              <div key={idx} className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-none px-3 py-2">
+                <div className="w-8 h-8 rounded-none bg-black flex items-center justify-center text-white text-xs font-semibold">
                   {member.username?.substring(0, 2).toUpperCase() || 'TM'}
                 </div>
-                <span className="text-sm text-gray-700">{member.username}</span>
+                <span className="text-sm text-black">{member.username}</span>
               </div>
             ))}
           </div>
@@ -246,11 +244,10 @@ function TaskDetail() {
               className={`flex ${msg.userId === currentUser?.id ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-xs rounded-lg px-4 py-2 ${
-                  msg.userId === currentUser?.id
-                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-800'
-                }`}
+                className={`max-w-xs rounded-none px-4 py-2 ${msg.userId === currentUser?.id
+                    ? 'bg-black text-white'
+                    : 'bg-gray-100 text-black border border-gray-300'
+                  }`}
               >
                 <p className="text-xs font-semibold mb-1 opacity-80">{msg.user}</p>
                 <p className="text-sm">{msg.text}</p>
@@ -264,18 +261,18 @@ function TaskDetail() {
         </div>
 
         {/* Message Input */}
-        <form onSubmit={sendMessage} className="p-4 border-t border-gray-200">
+        <form onSubmit={sendMessage} className="p-4 border-t-2 border-gray-200">
           <div className="flex gap-2">
             <input
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Type a message..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500"
+              className="flex-1 px-4 py-2 border-2 border-gray-300 rounded-none focus:outline-none focus:border-black"
             />
             <button
               type="submit"
-              className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:shadow-lg transition-shadow"
+              className="px-6 py-2 bg-black text-white rounded-none hover:bg-gray-800 transition-colors"
             >
               Send
             </button>
@@ -286,39 +283,38 @@ function TaskDetail() {
       {/* Whiteboard Section - Right Side */}
       <div className="flex-1 flex flex-col">
         {/* Toolbar */}
-        <div className="bg-white border-b border-gray-200 p-4 flex items-center gap-4">
-          <h3 className="text-lg font-semibold text-gray-800">Collaborative Whiteboard</h3>
+        <div className="bg-white border-b-2 border-black p-4 flex items-center gap-4">
+          <h3 className="text-lg font-semibold text-black">Collaborative Whiteboard</h3>
           <div className="flex-1"></div>
-          
+
           {/* Color Picker */}
           <div className="flex gap-2 items-center">
             <span className="text-sm text-gray-600">Color:</span>
-            <button onClick={() => changeColor('#000000')} className="w-8 h-8 rounded-full bg-black border-2 border-gray-300 hover:border-purple-500"></button>
-            <button onClick={() => changeColor('#EF4444')} className="w-8 h-8 rounded-full bg-red-500 border-2 border-gray-300 hover:border-purple-500"></button>
-            <button onClick={() => changeColor('#3B82F6')} className="w-8 h-8 rounded-full bg-blue-500 border-2 border-gray-300 hover:border-purple-500"></button>
-            <button onClick={() => changeColor('#10B981')} className="w-8 h-8 rounded-full bg-green-500 border-2 border-gray-300 hover:border-purple-500"></button>
-            <button onClick={() => changeColor('#F59E0B')} className="w-8 h-8 rounded-full bg-yellow-500 border-2 border-gray-300 hover:border-purple-500"></button>
-            <button onClick={() => changeColor('#8B5CF6')} className="w-8 h-8 rounded-full bg-purple-500 border-2 border-gray-300 hover:border-purple-500"></button>
+            <button onClick={() => changeColor('#000000')} className="w-8 h-8 rounded-none bg-black border-2 border-gray-300 hover:border-black"></button>
+            <button onClick={() => changeColor('#666666')} className="w-8 h-8 rounded-none bg-gray-500 border-2 border-gray-300 hover:border-black"></button>
+            <button onClick={() => changeColor('#999999')} className="w-8 h-8 rounded-none bg-gray-400 border-2 border-gray-300 hover:border-black"></button>
+            <button onClick={() => changeColor('#cccccc')} className="w-8 h-8 rounded-none bg-gray-300 border-2 border-gray-300 hover:border-black"></button>
+            <button onClick={() => changeColor('#ffffff')} className="w-8 h-8 rounded-none bg-white border-2 border-gray-300 hover:border-black"></button>
           </div>
 
           {/* Line Width */}
           <div className="flex gap-2 items-center ml-4">
             <span className="text-sm text-gray-600">Size:</span>
-            <button onClick={() => changeLineWidth(2)} className="w-8 h-8 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex items-center justify-center">
-              <div className="w-1 h-1 rounded-full bg-gray-600"></div>
+            <button onClick={() => changeLineWidth(2)} className="w-8 h-8 rounded-none border-2 border-gray-300 hover:border-black flex items-center justify-center">
+              <div className="w-1 h-1 rounded-full bg-black"></div>
             </button>
-            <button onClick={() => changeLineWidth(5)} className="w-8 h-8 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex items-center justify-center">
-              <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+            <button onClick={() => changeLineWidth(5)} className="w-8 h-8 rounded-none border-2 border-gray-300 hover:border-black flex items-center justify-center">
+              <div className="w-2 h-2 rounded-full bg-black"></div>
             </button>
-            <button onClick={() => changeLineWidth(10)} className="w-8 h-8 rounded-lg border-2 border-gray-300 hover:border-purple-500 flex items-center justify-center">
-              <div className="w-3 h-3 rounded-full bg-gray-600"></div>
+            <button onClick={() => changeLineWidth(10)} className="w-8 h-8 rounded-none border-2 border-gray-300 hover:border-black flex items-center justify-center">
+              <div className="w-3 h-3 rounded-full bg-black"></div>
             </button>
           </div>
 
           {/* Clear Button */}
           <button
             onClick={clearCanvas}
-            className="ml-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2"
+            className="ml-4 px-4 py-2 bg-black text-white rounded-none hover:bg-gray-800 transition-colors flex items-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -333,7 +329,7 @@ function TaskDetail() {
             ref={canvasRef}
             width={1200}
             height={700}
-            className="bg-white rounded-lg shadow-lg cursor-crosshair"
+            className="bg-white border-2 border-black cursor-crosshair"
             onMouseDown={startDrawing}
             onMouseMove={draw}
             onMouseUp={stopDrawing}

@@ -43,7 +43,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -69,10 +69,10 @@ function Login() {
       if (response.ok) {
         console.log('User data:', data.user);
         console.log('User role:', data.user.role);
-        
+
         // Store user info or token here if needed
         localStorage.setItem('user', JSON.stringify(data.user));
-        
+
         // Redirect based on role
         if (data.user && data.user.role === 'admin') {
           alert('Login successful! Redirecting to Admin Dashboard...');
@@ -92,75 +92,73 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-10">
+    <div className="min-h-screen flex items-center justify-center p-5 bg-white">
+      <div className="bg-white border-2 border-black rounded-none w-full max-w-md p-10">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-3">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" fill="#5b7fff"/>
+              <circle cx="12" cy="12" r="10" stroke="black" strokeWidth="2" fill="none" />
             </svg>
-            <h1 className="text-3xl font-bold text-gray-800">TaskMe</h1>
+            <h1 className="text-3xl font-bold text-black">TaskMe</h1>
           </div>
           <p className="text-gray-600">Welcome back! Please login to your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
-            <label htmlFor="email" className="font-semibold text-gray-800 text-sm">Email</label>
+            <label htmlFor="email" className="font-semibold text-black text-sm">Email</label>
             <input
               type="email"
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`px-4 py-3 border-2 rounded-lg text-sm transition-all outline-none ${
-                errors.email ? 'border-red-500' : 'border-gray-200'
-              } focus:border-primary focus:ring-4 focus:ring-primary/10`}
+              className={`px-4 py-3 border-2 rounded-none text-sm transition-all outline-none ${errors.email ? 'border-black bg-gray-100' : 'border-gray-300'
+                } focus:border-black`}
               placeholder="Enter your email"
             />
-            {errors.email && <span className="text-red-500 text-xs -mt-1">{errors.email}</span>}
+            {errors.email && <span className="text-black text-xs -mt-1">{errors.email}</span>}
           </div>
 
           <div className="flex flex-col gap-2">
-            <label htmlFor="password" className="font-semibold text-gray-800 text-sm">Password</label>
+            <label htmlFor="password" className="font-semibold text-black text-sm">Password</label>
             <input
               type="password"
               id="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={`px-4 py-3 border-2 rounded-lg text-sm transition-all outline-none ${
-                errors.password ? 'border-red-500' : 'border-gray-200'
-              } focus:border-primary focus:ring-4 focus:ring-primary/10`}
+              className={`px-4 py-3 border-2 rounded-none text-sm transition-all outline-none ${errors.password ? 'border-black bg-gray-100' : 'border-gray-300'
+                } focus:border-black`}
               placeholder="Enter your password"
             />
-            {errors.password && <span className="text-red-500 text-xs -mt-1">{errors.password}</span>}
+            {errors.password && <span className="text-black text-xs -mt-1">{errors.password}</span>}
           </div>
 
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" className="w-4 h-4 accent-primary cursor-pointer" />
+              <input type="checkbox" className="w-4 h-4 accent-black cursor-pointer" />
               <span className="text-gray-600">Remember me</span>
             </label>
-            <a href="#" className="text-primary font-semibold hover:underline">Forgot password?</a>
+            <a href="#" className="text-black font-semibold hover:underline">Forgot password?</a>
           </div>
 
           {errors.submit && (
-            <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm text-center">
+            <div className="bg-gray-100 text-black p-3 border-2 border-black text-sm text-center">
               {errors.submit}
             </div>
           )}
 
-          <button 
-            type="submit" 
-            className="bg-gradient-to-br from-[#667eea] to-[#764ba2] text-white py-3.5 rounded-lg text-base font-semibold cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/40 disabled:opacity-60 disabled:cursor-not-allowed"
+          <button
+            type="submit"
+            className="bg-black text-white py-3.5 rounded-none text-base font-semibold cursor-pointer transition-all hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed"
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
 
           <p className="text-center text-gray-600 text-sm mt-2">
-            Don't have an account? <Link to="/register" className="text-primary no-underline font-semibold hover:underline">Register here</Link>
+            Don't have an account? <Link to="/register" className="text-black no-underline font-semibold hover:underline">Register here</Link>
           </p>
         </form>
       </div>

@@ -158,27 +158,27 @@ function CreateTask() {
     };
 
     return (
-        <div className="flex min-h-screen bg-gray-100">
+        <div className="flex min-h-screen bg-white">
             {/* Sidebar */}
-            <aside className="w-64 bg-gradient-to-b from-secondary to-[#1e2875] fixed h-screen left-0 top-0">
+            <aside className="w-64 bg-black fixed h-screen left-0 top-0">
                 <div className="flex items-center gap-3 px-5 py-5 mb-10">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-                        <circle cx="12" cy="12" r="10" fill="#5b7fff"/>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="2" fill="none" />
                     </svg>
                     <span className="text-white text-xl font-bold">TaskMe Admin</span>
                 </div>
-                
+
                 <nav className="flex flex-col">
                     <Link to="/home2" className="flex items-center gap-3 px-5 py-3.5 text-white/70 cursor-pointer transition-all border-l-[3px] border-transparent hover:bg-white/10 hover:text-white">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" strokeWidth="2"/>
+                            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" strokeWidth="2" />
                         </svg>
                         <span className="text-[15px] font-medium">Employees</span>
                     </Link>
-                    
-                    <Link to="/create-task" className="flex items-center gap-3 px-5 py-3.5 text-white cursor-pointer transition-all border-l-[3px] border-white bg-primary/30">
+
+                    <Link to="/create-task" className="flex items-center gap-3 px-5 py-3.5 text-white cursor-pointer transition-all border-l-[3px] border-white bg-white/10">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M12 4v16m8-8H4" strokeWidth="2" strokeLinecap="round"/>
+                            <path d="M12 4v16m8-8H4" strokeWidth="2" strokeLinecap="round" />
                         </svg>
                         <span className="text-[15px] font-medium">Create Task</span>
                     </Link>
@@ -188,15 +188,15 @@ function CreateTask() {
             {/* Main Content */}
             <div className="ml-64 flex-1 flex flex-col">
                 {/* Top Navigation */}
-                <header className="bg-white px-8 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+                <header className="bg-white px-8 py-4 flex justify-between items-center border-b-2 border-black sticky top-0 z-50">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-800">Create New Task</h1>
+                        <h1 className="text-2xl font-bold text-black">Create New Task</h1>
                         <p className="text-sm text-gray-500">Assign a new task to your team members</p>
                     </div>
-                    
-                    <Link to="/home2" className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
+
+                    <Link to="/home2" className="px-4 py-2 text-gray-600 hover:text-black transition-colors">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M6 18L18 6M6 6l12 12" strokeWidth="2" strokeLinecap="round"/>
+                            <path d="M6 18L18 6M6 6l12 12" strokeWidth="2" strokeLinecap="round" />
                         </svg>
                     </Link>
                 </header>
@@ -205,13 +205,13 @@ function CreateTask() {
                 <div className="p-8 bg-gray-50 min-h-screen">
                     <div className="max-w-4xl mx-auto">
                         <form onSubmit={handleSubmit}>
-                            <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
-                                <h2 className="text-xl font-bold text-gray-800 mb-6">Task Details</h2>
-                                
+                            <div className="bg-white border-2 border-black rounded-none p-8 mb-6">
+                                <h2 className="text-xl font-bold text-black mb-6">Task Details</h2>
+
                                 {/* Team Name */}
                                 <div className="mb-6">
-                                    <label htmlFor="teamName" className="block text-sm font-semibold text-gray-700 mb-2">
-                                        Team Name <span className="text-red-500">*</span>
+                                    <label htmlFor="teamName" className="block text-sm font-semibold text-black mb-2">
+                                        Team Name <span className="text-black">*</span>
                                     </label>
                                     <input
                                         type="text"
@@ -219,18 +219,17 @@ function CreateTask() {
                                         name="teamName"
                                         value={formData.teamName}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border-2 rounded-lg text-sm transition-all outline-none ${
-                                            errors.teamName ? 'border-red-500' : 'border-gray-200'
-                                        } focus:border-primary focus:ring-4 focus:ring-primary/10`}
+                                        className={`w-full px-4 py-3 border-2 rounded-none text-sm transition-all outline-none ${errors.teamName ? 'border-black bg-gray-100' : 'border-gray-300'
+                                            } focus:border-black`}
                                         placeholder="e.g., Development Team, Design Team"
                                     />
-                                    {errors.teamName && <span className="text-red-500 text-xs mt-1">{errors.teamName}</span>}
+                                    {errors.teamName && <span className="text-black text-xs mt-1">{errors.teamName}</span>}
                                 </div>
 
                                 {/* Task Title */}
                                 <div className="mb-6">
-                                    <label htmlFor="title" className="block text-sm font-semibold text-gray-700 mb-2">
-                                        Task Title <span className="text-red-500">*</span>
+                                    <label htmlFor="title" className="block text-sm font-semibold text-black mb-2">
+                                        Task Title <span className="text-black">*</span>
                                     </label>
                                     <input
                                         type="text"
@@ -238,17 +237,16 @@ function CreateTask() {
                                         name="title"
                                         value={formData.title}
                                         onChange={handleChange}
-                                        className={`w-full px-4 py-3 border-2 rounded-lg text-sm transition-all outline-none ${
-                                            errors.title ? 'border-red-500' : 'border-gray-200'
-                                        } focus:border-primary focus:ring-4 focus:ring-primary/10`}
+                                        className={`w-full px-4 py-3 border-2 rounded-none text-sm transition-all outline-none ${errors.title ? 'border-black bg-gray-100' : 'border-gray-300'
+                                            } focus:border-black`}
                                         placeholder="Enter task title"
                                     />
-                                    {errors.title && <span className="text-red-500 text-xs mt-1">{errors.title}</span>}
+                                    {errors.title && <span className="text-black text-xs mt-1">{errors.title}</span>}
                                 </div>
 
                                 {/* Priority */}
                                 <div className="mb-6">
-                                    <label htmlFor="priority" className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label htmlFor="priority" className="block text-sm font-semibold text-black mb-2">
                                         Priority
                                     </label>
                                     <select
@@ -256,7 +254,7 @@ function CreateTask() {
                                         name="priority"
                                         value={formData.priority}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm transition-all outline-none focus:border-primary focus:ring-4 focus:ring-primary/10"
+                                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-none text-sm transition-all outline-none focus:border-black"
                                     >
                                         <option value="low">Low</option>
                                         <option value="medium">Medium</option>
@@ -266,8 +264,8 @@ function CreateTask() {
 
                                 {/* Description */}
                                 <div className="mb-6">
-                                    <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
-                                        Description <span className="text-red-500">*</span>
+                                    <label htmlFor="description" className="block text-sm font-semibold text-black mb-2">
+                                        Description <span className="text-black">*</span>
                                     </label>
                                     <textarea
                                         id="description"
@@ -275,27 +273,26 @@ function CreateTask() {
                                         value={formData.description}
                                         onChange={handleChange}
                                         rows="6"
-                                        className={`w-full px-4 py-3 border-2 rounded-lg text-sm transition-all outline-none resize-none ${
-                                            errors.description ? 'border-red-500' : 'border-gray-200'
-                                        } focus:border-primary focus:ring-4 focus:ring-primary/10`}
+                                        className={`w-full px-4 py-3 border-2 rounded-none text-sm transition-all outline-none resize-none ${errors.description ? 'border-black bg-gray-100' : 'border-gray-300'
+                                            } focus:border-black`}
                                         placeholder="Provide a detailed description of the task, requirements, and expected outcomes..."
                                     />
                                     <div className="flex justify-between items-center mt-1">
-                                        {errors.description && <span className="text-red-500 text-xs">{errors.description}</span>}
+                                        {errors.description && <span className="text-black text-xs">{errors.description}</span>}
                                         <span className="text-xs text-gray-500 ml-auto">{formData.description.length} characters</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Duration Section */}
-                            <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
-                                <h2 className="text-xl font-bold text-gray-800 mb-6">Task Duration</h2>
-                                
+                            <div className="bg-white border-2 border-black rounded-none p-8 mb-6">
+                                <h2 className="text-xl font-bold text-black mb-6">Task Duration</h2>
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                                     {/* Start Date */}
                                     <div>
-                                        <label htmlFor="startDate" className="block text-sm font-semibold text-gray-700 mb-2">
-                                            Start Date <span className="text-red-500">*</span>
+                                        <label htmlFor="startDate" className="block text-sm font-semibold text-black mb-2">
+                                            Start Date <span className="text-black">*</span>
                                         </label>
                                         <input
                                             type="date"
@@ -303,17 +300,16 @@ function CreateTask() {
                                             name="startDate"
                                             value={formData.startDate}
                                             onChange={handleChange}
-                                            className={`w-full px-4 py-3 border-2 rounded-lg text-sm transition-all outline-none ${
-                                                errors.startDate ? 'border-red-500' : 'border-gray-200'
-                                            } focus:border-primary focus:ring-4 focus:ring-primary/10`}
+                                            className={`w-full px-4 py-3 border-2 rounded-none text-sm transition-all outline-none ${errors.startDate ? 'border-black bg-gray-100' : 'border-gray-300'
+                                                } focus:border-black`}
                                         />
-                                        {errors.startDate && <span className="text-red-500 text-xs mt-1">{errors.startDate}</span>}
+                                        {errors.startDate && <span className="text-black text-xs mt-1">{errors.startDate}</span>}
                                     </div>
 
                                     {/* End Date */}
                                     <div>
-                                        <label htmlFor="endDate" className="block text-sm font-semibold text-gray-700 mb-2">
-                                            End Date <span className="text-red-500">*</span>
+                                        <label htmlFor="endDate" className="block text-sm font-semibold text-black mb-2">
+                                            End Date <span className="text-black">*</span>
                                         </label>
                                         <input
                                             type="date"
@@ -321,55 +317,54 @@ function CreateTask() {
                                             name="endDate"
                                             value={formData.endDate}
                                             onChange={handleChange}
-                                            className={`w-full px-4 py-3 border-2 rounded-lg text-sm transition-all outline-none ${
-                                                errors.endDate ? 'border-red-500' : 'border-gray-200'
-                                            } focus:border-primary focus:ring-4 focus:ring-primary/10`}
+                                            className={`w-full px-4 py-3 border-2 rounded-none text-sm transition-all outline-none ${errors.endDate ? 'border-black bg-gray-100' : 'border-gray-300'
+                                                } focus:border-black`}
                                         />
-                                        {errors.endDate && <span className="text-red-500 text-xs mt-1">{errors.endDate}</span>}
+                                        {errors.endDate && <span className="text-black text-xs mt-1">{errors.endDate}</span>}
                                     </div>
                                 </div>
 
                                 {/* Duration Display */}
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div className="bg-gray-100 border-2 border-black rounded-none p-4">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-sm font-semibold text-gray-700">Total Duration:</span>
-                                        <span className="text-lg font-bold text-blue-600">{calculateDuration()}</span>
+                                        <span className="text-sm font-semibold text-black">Total Duration:</span>
+                                        <span className="text-lg font-bold text-black">{calculateDuration()}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Team Members Section */}
-                            <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
-                                <h2 className="text-xl font-bold text-gray-800 mb-2">Assign Team Members</h2>
+                            <div className="bg-white border-2 border-black rounded-none p-8 mb-6">
+                                <h2 className="text-xl font-bold text-black mb-2">Assign Team Members</h2>
                                 <p className="text-sm text-gray-500 mb-6">Select one or more team members to assign this task</p>
-                                
+
                                 {errors.members && (
-                                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-                                        <span className="text-red-600 text-sm font-medium">{errors.members}</span>
+                                    <div className="bg-gray-100 border-2 border-black rounded-none p-3 mb-4">
+                                        <span className="text-black text-sm font-medium">{errors.members}</span>
                                     </div>
                                 )}
 
                                 {/* Search Bar */}
                                 <div className="mb-6">
-                                    <div className="flex items-center gap-3 bg-gray-50 px-4 py-3 rounded-lg">
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF">
-                                            <circle cx="11" cy="11" r="8" strokeWidth="2"/>
-                                            <path d="M21 21l-4.35-4.35" strokeWidth="2"/>
+                                    <div className="flex items-center gap-3 bg-gray-100 px-4 py-3 rounded-none border border-gray-300">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666">
+                                            <circle cx="11" cy="11" r="8" strokeWidth="2" />
+                                            <path d="M21 21l-4.35-4.35" strokeWidth="2" />
                                         </svg>
-                                        <input 
-                                            type="text" 
-                                            placeholder="Search employees by name or email..." 
-                                            className="border-none bg-transparent outline-none flex-1 text-sm text-gray-700 placeholder-gray-400"
+                                        <input
+                                            type="text"
+                                            placeholder="Search employees by name or email..."
+                                            className="border-none bg-transparent outline-none flex-1 text-sm text-black placeholder-gray-500"
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                         />
                                         {searchQuery && (
                                             <button
                                                 onClick={() => setSearchQuery('')}
-                                                className="text-gray-400 hover:text-gray-600"
+                                                className="text-gray-500 hover:text-black"
                                             >
                                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                                    <path d="M6 18L18 6M6 6l12 12" strokeWidth="2" strokeLinecap="round"/>
+                                                    <path d="M6 18L18 6M6 6l12 12" strokeWidth="2" strokeLinecap="round" />
                                                 </svg>
                                             </button>
                                         )}
@@ -379,7 +374,7 @@ function CreateTask() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {employees.length === 0 ? (
                                         <p className="text-gray-500 text-sm col-span-2">No employees available</p>
-                                    ) : employees.filter(employee => 
+                                    ) : employees.filter(employee =>
                                         employee.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
                                         employee.email.toLowerCase().includes(searchQuery.toLowerCase())
                                     ).length === 0 ? (
@@ -388,49 +383,47 @@ function CreateTask() {
                                         </div>
                                     ) : (
                                         employees
-                                            .filter(employee => 
+                                            .filter(employee =>
                                                 employee.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
                                                 employee.email.toLowerCase().includes(searchQuery.toLowerCase())
                                             )
                                             .map((employee) => (
-                                            <div
-                                                key={employee.id}
-                                                onClick={() => handleMemberToggle(employee.id)}
-                                                className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
-                                                    selectedMembers.includes(employee.id)
-                                                        ? 'border-primary bg-blue-50'
-                                                        : 'border-gray-200 hover:border-gray-300'
-                                                }`}
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                                                        selectedMembers.includes(employee.id)
-                                                            ? 'bg-primary'
-                                                            : 'bg-gradient-to-br from-[#667eea] to-[#764ba2]'
-                                                    }`}>
-                                                        {selectedMembers.includes(employee.id) ? (
-                                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                                                                <path d="M5 13l4 4L19 7" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                                                            </svg>
-                                                        ) : (
-                                                            <span className="text-white font-bold text-sm">
-                                                                {employee.username.substring(0, 2).toUpperCase()}
-                                                            </span>
-                                                        )}
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <h3 className="font-semibold text-gray-800">{employee.username}</h3>
-                                                        <p className="text-xs text-gray-500">{employee.email}</p>
+                                                <div
+                                                    key={employee.id}
+                                                    onClick={() => handleMemberToggle(employee.id)}
+                                                    className={`border-2 rounded-none p-4 cursor-pointer transition-all ${selectedMembers.includes(employee.id)
+                                                            ? 'border-black bg-gray-100'
+                                                            : 'border-gray-300 hover:border-gray-500'
+                                                        }`}
+                                                >
+                                                    <div className="flex items-center gap-3">
+                                                        <div className={`w-10 h-10 rounded-none flex items-center justify-center ${selectedMembers.includes(employee.id)
+                                                                ? 'bg-black'
+                                                                : 'bg-gray-600'
+                                                            }`}>
+                                                            {selectedMembers.includes(employee.id) ? (
+                                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                                                                    <path d="M5 13l4 4L19 7" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                                                </svg>
+                                                            ) : (
+                                                                <span className="text-white font-bold text-sm">
+                                                                    {employee.username.substring(0, 2).toUpperCase()}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <div className="flex-1">
+                                                            <h3 className="font-semibold text-black">{employee.username}</h3>
+                                                            <p className="text-xs text-gray-500">{employee.email}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ))
+                                            ))
                                     )}
                                 </div>
 
                                 {selectedMembers.length > 0 && (
-                                    <div className="mt-4 bg-green-50 border border-green-200 rounded-lg p-3">
-                                        <span className="text-green-700 text-sm font-medium">
+                                    <div className="mt-4 bg-gray-100 border-2 border-black rounded-none p-3">
+                                        <span className="text-black text-sm font-medium">
                                             {selectedMembers.length} member{selectedMembers.length !== 1 ? 's' : ''} selected
                                         </span>
                                     </div>
@@ -438,10 +431,10 @@ function CreateTask() {
                             </div>
 
                             {/* Submit Section */}
-                            <div className="bg-white rounded-xl shadow-sm p-8">
+                            <div className="bg-white border-2 border-black rounded-none p-8">
                                 {errors.submit && (
-                                    <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
-                                        <span className="text-red-600 text-sm font-medium">{errors.submit}</span>
+                                    <div className="bg-gray-100 border-2 border-black rounded-none p-3 mb-4">
+                                        <span className="text-black text-sm font-medium">{errors.submit}</span>
                                     </div>
                                 )}
 
@@ -449,13 +442,13 @@ function CreateTask() {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="flex-1 bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="flex-1 bg-black text-white py-3 px-6 rounded-none font-semibold hover:bg-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {loading ? 'Creating Task...' : 'Create Task'}
                                     </button>
                                     <Link
                                         to="/home2"
-                                        className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-all text-center"
+                                        className="px-6 py-3 border-2 border-gray-300 text-black rounded-none font-semibold hover:border-black transition-all text-center"
                                     >
                                         Cancel
                                     </Link>
