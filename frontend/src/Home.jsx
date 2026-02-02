@@ -1,4 +1,26 @@
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
+
 function Home() {
+  // Sample data for charts
+  const taskProgressData = [
+    { day: 'Mon', completed: 4, inProgress: 2, todo: 3 },
+    { day: 'Tue', completed: 3, inProgress: 4, todo: 2 },
+    { day: 'Wed', completed: 5, inProgress: 3, todo: 4 },
+    { day: 'Thu', completed: 2, inProgress: 5, todo: 1 },
+    { day: 'Fri', completed: 6, inProgress: 2, todo: 3 },
+    { day: 'Sat', completed: 4, inProgress: 3, todo: 2 },
+    { day: 'Sun', completed: 3, inProgress: 1, todo: 4 },
+  ];
+
+  const weeklyActivityData = [
+    { week: 'Week 1', tasks: 12 },
+    { week: 'Week 2', tasks: 19 },
+    { week: 'Week 3', tasks: 15 },
+    { week: 'Week 4', tasks: 22 },
+    { week: 'Week 5', tasks: 18 },
+    { week: 'Week 6', tasks: 25 },
+  ];
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
@@ -140,6 +162,143 @@ function Home() {
                 </svg>
               </div>
             </div>
+          </div>
+
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+            {/* Wave/Area Chart */}
+            <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
+              <h3 className="text-lg font-bold text-gray-800 mb-4">Task Progress Over Week</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <AreaChart data={taskProgressData}>
+                  <defs>
+                    <linearGradient id="colorCompleted" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#10b981" stopOpacity={0.1}/>
+                    </linearGradient>
+                    <linearGradient id="colorInProgress" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.1}/>
+                    </linearGradient>
+                    <linearGradient id="colorTodo" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#ec4899" stopOpacity={0.8}/>
+                      <stop offset="95%" stopColor="#ec4899" stopOpacity={0.1}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="day" stroke="#6b7280" style={{ fontSize: '12px' }} />
+                  <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#fff', 
+                      border: '1px solid #e5e7eb', 
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                    }} 
+                  />
+                  <Legend wrapperStyle={{ fontSize: '12px' }} />
+                  <Area 
+                    type="monotone" 
+                    dataKey="completed" 
+                    stroke="#10b981" 
+                    fillOpacity={1} 
+                    fill="url(#colorCompleted)" 
+                    name="Completed"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="inProgress" 
+                    stroke="#f59e0b" 
+                    fillOpacity={1} 
+                    fill="url(#colorInProgress)" 
+                    name="In Progress"
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="todo" 
+                    stroke="#ec4899" 
+                    fillOpacity={1} 
+                    fill="url(#colorTodo)" 
+                    name="To Do"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Histogram/Bar Chart */}
+            <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all">
+              <h3 className="text-lg font-bold text-gray-800 mb-4">Weekly Task Activity</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={weeklyActivityData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="week" stroke="#6b7280" style={{ fontSize: '12px' }} />
+                  <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#fff', 
+                      border: '1px solid #e5e7eb', 
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                    }} 
+                  />
+                  <Legend wrapperStyle={{ fontSize: '12px' }} />
+                  <Bar 
+                    dataKey="tasks" 
+                    fill="#5b7fff" 
+                    radius={[8, 8, 0, 0]}
+                    name="Tasks Completed"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Additional Wave Chart */}
+          <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all mt-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-4">Task Completion Trend</h3>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={taskProgressData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="day" stroke="#6b7280" style={{ fontSize: '12px' }} />
+                <YAxis stroke="#6b7280" style={{ fontSize: '12px' }} />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#fff', 
+                    border: '1px solid #e5e7eb', 
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                  }} 
+                />
+                <Legend wrapperStyle={{ fontSize: '12px' }} />
+                <Line 
+                  type="monotone" 
+                  dataKey="completed" 
+                  stroke="#10b981" 
+                  strokeWidth={3}
+                  dot={{ fill: '#10b981', r: 5 }}
+                  activeDot={{ r: 7 }}
+                  name="Completed"
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="inProgress" 
+                  stroke="#f59e0b" 
+                  strokeWidth={3}
+                  dot={{ fill: '#f59e0b', r: 5 }}
+                  activeDot={{ r: 7 }}
+                  name="In Progress"
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="todo" 
+                  stroke="#ec4899" 
+                  strokeWidth={3}
+                  dot={{ fill: '#ec4899', r: 5 }}
+                  activeDot={{ r: 7 }}
+                  name="To Do"
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>

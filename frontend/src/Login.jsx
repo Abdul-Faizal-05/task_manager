@@ -67,10 +67,20 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Login successful!');
+        console.log('User data:', data.user);
+        console.log('User role:', data.user.role);
+        
         // Store user info or token here if needed
-        // Redirect to dashboard or home page
-        window.location.href = '/';
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        // Redirect based on role
+        if (data.user && data.user.role === 'admin') {
+          alert('Login successful! Redirecting to Admin Dashboard...');
+          window.location.href = '/home2';
+        } else {
+          alert('Login successful! Redirecting to Dashboard...');
+          window.location.href = '/home';
+        }
       } else {
         setErrors({ submit: data.message || 'Login failed' });
       }
@@ -82,7 +92,7 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#667eea] to-[#764ba2] p-5">
+    <div className="min-h-screen flex items-center justify-center p-5">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-10">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-3">
