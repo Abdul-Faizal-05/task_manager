@@ -3,122 +3,87 @@ import { Link } from 'react-router-dom';
 
 function Home2(){
     const [employees, setEmployees] = useState([]);
+    const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterRole, setFilterRole] = useState('all');
     const [activeTab, setActiveTab] = useState('employees');
+    const [taskFilter, setTaskFilter] = useState('all');
+    const [taskSearchQuery, setTaskSearchQuery] = useState('');
 
     // Sample employee data - Replace with API call
     useEffect(() => {
         const fetchEmployees = async () => {
-            // Simulated data - replace with actual API call
-            const sampleEmployees = [
-                {
-                    id: 1,
-                    name: 'John Doe',
-                    email: 'john.doe@company.com',
-                    role: 'employee',
-                    department: 'Frontend',
-                    tasksAssigned: 5,
-                    tasksCompleted: 3,
-                    status: 'active',
-                    joinDate: '2024-01-15',
-                    avatar: 'JD'
-                },
-                {
-                    id: 2,
-                    name: 'Jane Smith',
-                    email: 'jane.smith@company.com',
-                    role: 'employee',
-                    department: 'Backend',
-                    tasksAssigned: 8,
-                    tasksCompleted: 7,
-                    status: 'active',
-                    joinDate: '2023-11-20',
-                    avatar: 'JS'
-                },
-                {
-                    id: 3,
-                    name: 'Mike Johnson',
-                    email: 'mike.johnson@company.com',
-                    role: 'employee',
-                    department: 'Database',
-                    tasksAssigned: 4,
-                    tasksCompleted: 2,
-                    status: 'active',
-                    joinDate: '2024-03-10',
-                    avatar: 'MJ'
-                },
-                {
-                    id: 4,
-                    name: 'Sarah Williams',
-                    email: 'sarah.williams@company.com',
-                    role: 'employee',
-                    department: 'Testing',
-                    tasksAssigned: 6,
-                    tasksCompleted: 4,
-                    status: 'active',
-                    joinDate: '2023-09-05',
-                    avatar: 'SW'
-                },
-                {
-                    id: 5,
-                    name: 'David Brown',
-                    email: 'david.brown@company.com',
-                    role: 'employee',
-                    department: 'UI/UX',
-                    tasksAssigned: 3,
-                    tasksCompleted: 1,
-                    status: 'active',
-                    joinDate: '2024-02-01',
-                    avatar: 'DB'
-                },
-                {
-                    id: 6,
-                    name: 'Emma Davis',
-                    email: 'emma.davis@company.com',
-                    role: 'employee',
-                    department: 'Security',
-                    tasksAssigned: 7,
-                    tasksCompleted: 6,
-                    status: 'active',
-                    joinDate: '2023-07-12',
-                    avatar: 'ED'
-                },
-                {
-                    id: 7,
-                    name: 'Robert Wilson',
-                    email: 'robert.wilson@company.com',
-                    role: 'manager',
-                    department: 'Management',
-                    tasksAssigned: 10,
-                    tasksCompleted: 8,
-                    status: 'active',
-                    joinDate: '2022-05-15',
-                    avatar: 'RW'
-                },
-                {
-                    id: 8,
-                    name: 'Lisa Anderson',
-                    email: 'lisa.anderson@company.com',
-                    role: 'employee',
-                    department: 'Frontend',
-                    tasksAssigned: 5,
-                    tasksCompleted: 5,
-                    status: 'active',
-                    joinDate: '2023-12-08',
-                    avatar: 'LA'
+            try {
+                console.log('Fetching employees from API...');
+                const response = await fetch('http://localhost:5000/api/auth/users');
+                console.log('Response status:', response.status);
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (response.ok) {
+                    // Transform API data to match component structure
+                    const transformedEmployees = data.users.map(user => ({
+                        id: user.id,
+                        name: user.username,
+                        email: user.email,
+                        role: user.role || 'employee',
+                        department: getDepartmentByRole(user.role),
+                        tasksAssigned: Math.floor(Math.random() * 10) + 1, // Replace with actual task data later
+                        tasksCompleted: Math.floor(Math.random() * 8), // Replace with actual task data later
+                        status: 'active',
+                        joinDate: user.createdAt,
+                        avatar: user.username.split(' ').map(n => n[0].toUpperCase()).join('').substring(0, 2)
+                    }));
+
+                    console.log('Transformed employees:', transformedEmployees);
+                    setEmployees(transformedEmployees);
+                } else {
+                    console.error('Failed to fetch users:', data.message);
+                    alert('Failed to fetch employees: ' + data.message);
                 }
-            ];
-            
-            setTimeout(() => {
-                setEmployees(sampleEmployees);
+            } catch (error) {
+                console.error('Error fetching employees:', error);
+                alert('Error connecting to server. Make sure the backend is running on port 5000.');
+            } finally {
                 setLoading(false);
-            }, 500);
+            }
         };
 
         fetchEmployees();
     }, []);
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/tasks/');
+                const data = await response.json();
+                if (response.ok) {
+                    setTasks(data.tasks);
+                } else {
+                    console.error('Failed to fetch tasks:', data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        };
+
+        if (activeTab === 'tasks') {
+            fetchTasks();
+        }
+    }, [activeTab]);
+
+    // Helper function to assign department based on role
+    const getDepartmentByRole = (role) => {
+        switch(role) {
+            case 'admin':
+                return 'Administration';
+            case 'manager':
+                return 'Management';
+            default:
+                return 'General';
+        }
+    };
 
     const filteredEmployees = employees.filter(emp => {
         const matchesSearch = emp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -213,7 +178,15 @@ function Home2(){
                         <p className="text-sm text-gray-500">Manage employees and tasks</p>
                     </div>
                     
-                    <div className="flex items-center gap-5">
+                    <div className="flex items-center gap-3 ml-auto mr-5">
+                        {activeTab === 'tasks' && (
+                            <Link 
+                                to="/create-task"
+                                className="inline-flex items-center gap-2 bg-primary text-white px-5 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-md hover:shadow-lg mr-2"
+                            >
+                               + Create Task
+                            </Link>
+                        )}
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
                             <span className="text-white font-bold text-sm">AD</span>
                         </div>
@@ -304,40 +277,40 @@ function Home2(){
                                     <div className="flex gap-3 flex-wrap">
                                         <button 
                                             onClick={() => setFilterRole('all')}
-                                            className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                                            className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                                                 filterRole === 'all' 
-                                                    ? 'bg-primary text-white shadow-md' 
-                                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                                                    ? 'bg-primary text-white shadow-lg' 
+                                                    : 'bg-white text-primary hover:bg-blue-50 border-2 border-primary'
                                             }`}
                                         >
                                             All Roles
                                         </button>
                                         <button 
                                             onClick={() => setFilterRole('employee')}
-                                            className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                                            className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                                                 filterRole === 'employee' 
-                                                    ? 'bg-gray-500 text-white shadow-md' 
-                                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                                                    ? 'bg-primary text-white shadow-lg' 
+                                                    : 'bg-white text-primary hover:bg-blue-50 border-2 border-primary'
                                             }`}
                                         >
                                             Employees
                                         </button>
                                         <button 
                                             onClick={() => setFilterRole('manager')}
-                                            className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                                            className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                                                 filterRole === 'manager' 
-                                                    ? 'bg-blue-500 text-white shadow-md' 
-                                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                                                    ? 'bg-primary text-white shadow-lg' 
+                                                    : 'bg-white text-primary hover:bg-blue-50 border-2 border-primary'
                                             }`}
                                         >
                                             Managers
                                         </button>
                                         <button 
                                             onClick={() => setFilterRole('admin')}
-                                            className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                                            className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
                                                 filterRole === 'admin' 
-                                                    ? 'bg-purple-500 text-white shadow-md' 
-                                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                                                    ? 'bg-primary text-white shadow-lg' 
+                                                    : 'bg-white text-primary hover:bg-blue-50 border-2 border-primary'
                                             }`}
                                         >
                                             Admins
@@ -443,10 +416,7 @@ function Home2(){
 
                                     {filteredEmployees.length === 0 && (
                                         <div className="text-center py-20">
-                                            <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                            <h3 className="text-lg font-semibold text-gray-700 mb-2">No employees found</h3>
+                                            <h3 className="text-xl font-bold text-gray-800 mb-2">No employees found</h3>
                                             <p className="text-gray-500">Try adjusting your search or filter criteria</p>
                                         </div>
                                     )}
@@ -455,15 +425,160 @@ function Home2(){
                         </>
                     )}
 
-                    {/* Tasks Section Placeholder */}
+                    {/* Tasks Section */}
                     {activeTab === 'tasks' && (
-                        <div className="bg-white rounded-xl p-12 shadow-sm text-center">
-                            <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                            <h3 className="text-xl font-bold text-gray-800 mb-2">Tasks Management</h3>
-                            <p className="text-gray-600">View and manage all tasks assigned to employees</p>
-                        </div>
+                        <>
+                            <div className="mb-6">
+                                <h2 className="text-2xl font-bold text-gray-800">Tasks Management</h2>
+                                <p className="text-sm text-gray-500 mt-1">View and manage all tasks assigned to employees</p>
+                            </div>
+
+                            {/* Task Filters and Search */}
+                            <div className="mb-6 flex flex-col sm:flex-row gap-4 justify-between">
+                                <div className="flex gap-2 flex-wrap">
+                                    <button
+                                        onClick={() => setTaskFilter('all')}
+                                        className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                                            taskFilter === 'all'
+                                                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                                                : 'bg-white text-gray-600 border-2 border-gray-200 hover:border-purple-300'
+                                        }`}
+                                    >
+                                        All Tasks
+                                    </button>
+                                    <button
+                                        onClick={() => setTaskFilter('pending')}
+                                        className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                                            taskFilter === 'pending'
+                                                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                                                : 'bg-white text-yellow-600 border-2 border-yellow-200 hover:border-yellow-300'
+                                        }`}
+                                    >
+                                        Pending
+                                    </button>
+
+                                    <button
+                                        onClick={() => setTaskFilter('completed')}
+                                        className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                                            taskFilter === 'completed'
+                                                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg'
+                                                : 'bg-white text-green-600 border-2 border-green-200 hover:border-green-300'
+                                        }`}
+                                    >
+                                        Completed
+                                    </button>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search tasks..."
+                                    value={taskSearchQuery}
+                                    onChange={(e) => setTaskSearchQuery(e.target.value)}
+                                    className="px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-purple-500 w-full sm:w-64"
+                                />
+                            </div>
+
+                            {/* Tasks Grid */}
+                            {loading ? (
+                                <div className="text-center py-12">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+                                    <p className="mt-4 text-gray-600">Loading tasks...</p>
+                                </div>
+                            ) : tasks.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <h3 className="text-lg font-semibold text-gray-700 mb-2">No tasks yet</h3>
+                                    <p className="text-gray-500">Click the "Create Task" button to assign your first task</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {tasks
+                                        .filter(task => {
+                                            const matchesFilter = taskFilter === 'all' || task.status === taskFilter;
+                                            const matchesSearch = task.title?.toLowerCase().includes(taskSearchQuery.toLowerCase()) ||
+                                                                 task.description?.toLowerCase().includes(taskSearchQuery.toLowerCase()) ||
+                                                                 task.teamName?.toLowerCase().includes(taskSearchQuery.toLowerCase());
+                                            return matchesFilter && matchesSearch;
+                                        })
+                                        .map((task) => (
+                                            <Link 
+                                                key={task._id} 
+                                                to={`/task/${task._id}`}
+                                                className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 block cursor-pointer"
+                                            >
+                                                <div className="p-6">
+                                                    {/* Task Header */}
+                                                    <div className="flex justify-between items-start mb-4">
+                                                        <div className="flex-1">
+                                                            <h3 className="text-lg font-bold text-gray-800 mb-1">{task.title}</h3>
+                                                            <p className="text-sm text-gray-500">{task.teamName}</p>
+                                                        </div>
+                                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                                            task.priority === 'high' ? 'bg-red-100 text-red-700' :
+                                                            task.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                                                            'bg-green-100 text-green-700'
+                                                        }`}>
+                                                            {task.priority}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Description */}
+                                                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{task.description}</p>
+
+                                                    {/* Status Badge */}
+                                                    <div className="mb-4">
+                                                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                                            task.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                                            'bg-yellow-100 text-yellow-800'
+                                                        }`}>
+                                                            <span className={`w-2 h-2 rounded-full mr-2 ${
+                                                                task.status === 'completed' ? 'bg-green-600' :
+                                                                'bg-yellow-600'
+                                                            }`}></span>
+                                                            {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+                                                        </span>
+                                                    </div>
+
+                                                    {/* Task Info */}
+                                                    <div className="space-y-2 mb-4">
+                                                        <div className="flex items-center text-sm text-gray-600">
+                                                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                            </svg>
+                                                            <span>Due: {new Date(task.endDate).toLocaleDateString()}</span>
+                                                        </div>
+                                                        <div className="flex items-center text-sm text-gray-600">
+                                                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                            <span>Duration: {task.duration} days</span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Team Members */}
+                                                    <div className="flex items-center">
+                                                        <span className="text-sm text-gray-500 mr-2">Team:</span>
+                                                        <div className="flex -space-x-2">
+                                                            {task.members?.slice(0, 3).map((member, idx) => (
+                                                                <div
+                                                                    key={idx}
+                                                                    className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center text-white text-xs font-semibold border-2 border-white"
+                                                                    title={member.username || 'Team Member'}
+                                                                >
+                                                                    {member.username ? member.username.substring(0, 2).toUpperCase() : 'TM'}
+                                                                </div>
+                                                            ))}
+                                                            {task.members?.length > 3 && (
+                                                                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-xs font-semibold border-2 border-white">
+                                                                    +{task.members.length - 3}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

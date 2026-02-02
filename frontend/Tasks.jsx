@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 function Tasks() {
   const [tasks, setTasks] = useState([]);
@@ -6,83 +7,30 @@ function Tasks() {
   const [filter, setFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Sample task data - Replace with API call
+  // Fetch user-specific tasks from API
   useEffect(() => {
     const fetchTasks = async () => {
-      // Simulated data - replace with actual API call
-      const sampleTasks = [
-        {
-          id: 1,
-          title: 'Design Homepage Layout',
-          description: 'Create a modern and responsive homepage layout with hero section and feature cards',
-          assignedTo: 'John Doe',
-          status: 'in-progress',
-          priority: 'high',
-          dueDate: '2026-02-10',
-          tags: ['Design', 'Frontend'],
-          progress: 65
-        },
-        {
-          id: 2,
-          title: 'API Integration',
-          description: 'Integrate RESTful API endpoints for user authentication and data management',
-          assignedTo: 'Jane Smith',
-          status: 'completed',
-          priority: 'high',
-          dueDate: '2026-02-05',
-          tags: ['Backend', 'API'],
-          progress: 100
-        },
-        {
-          id: 3,
-          title: 'Database Optimization',
-          description: 'Optimize database queries and add proper indexing for better performance',
-          assignedTo: 'Mike Johnson',
-          status: 'todo',
-          priority: 'medium',
-          dueDate: '2026-02-15',
-          tags: ['Database', 'Performance'],
-          progress: 0
-        },
-        {
-          id: 4,
-          title: 'Write Unit Tests',
-          description: 'Create comprehensive unit tests for all components and utility functions',
-          assignedTo: 'Sarah Williams',
-          status: 'in-progress',
-          priority: 'medium',
-          dueDate: '2026-02-12',
-          tags: ['Testing', 'Quality'],
-          progress: 40
-        },
-        {
-          id: 5,
-          title: 'User Dashboard Enhancement',
-          description: 'Add charts and analytics to the user dashboard for better insights',
-          assignedTo: 'David Brown',
-          status: 'todo',
-          priority: 'low',
-          dueDate: '2026-02-20',
-          tags: ['Frontend', 'UI/UX'],
-          progress: 0
-        },
-        {
-          id: 6,
-          title: 'Security Audit',
-          description: 'Conduct security audit and implement recommended security measures',
-          assignedTo: 'Emma Davis',
-          status: 'in-progress',
-          priority: 'high',
-          dueDate: '2026-02-08',
-          tags: ['Security', 'Backend'],
-          progress: 75
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || !user.id) {
+          console.error('No user found in localStorage');
+          setLoading(false);
+          return;
         }
-      ];
-      
-      setTimeout(() => {
-        setTasks(sampleTasks);
+
+        const response = await fetch(`http://localhost:5000/api/tasks/member/${user.id}`);
+        const data = await response.json();
+        
+        if (response.ok) {
+          setTasks(data.tasks);
+        } else {
+          console.error('Failed to fetch tasks:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      } finally {
         setLoading(false);
-      }, 500);
+      }
     };
 
     fetchTasks();
@@ -92,10 +40,8 @@ function Tasks() {
     switch (status) {
       case 'completed':
         return 'bg-green-100 text-green-700 border-green-200';
-      case 'in-progress':
+      case 'pending':
         return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      case 'todo':
-        return 'bg-blue-100 text-blue-700 border-blue-200';
       default:
         return 'bg-gray-100 text-gray-700 border-gray-200';
     }
@@ -116,9 +62,9 @@ function Tasks() {
 
   const filteredTasks = tasks.filter(task => {
     const matchesFilter = filter === 'all' || task.status === filter;
-    const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          task.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          task.assignedTo.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = (task.title?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+                          (task.description?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+                          (task.teamName?.toLowerCase() || '').includes(searchQuery.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -130,12 +76,7 @@ function Tasks() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         );
-      case 'in-progress':
-        return (
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        );
+      case 'pending':
       case 'todo':
         return (
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,25 +175,16 @@ function Tasks() {
                   All Tasks
                 </button>
                 <button 
-                  onClick={() => setFilter('todo')}
+                  onClick={() => setFilter('pending')}
                   className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                    filter === 'todo' 
-                      ? 'bg-blue-500 text-white shadow-md' 
-                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  To Do
-                </button>
-                <button 
-                  onClick={() => setFilter('in-progress')}
-                  className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                    filter === 'in-progress' 
+                    filter === 'pending' 
                       ? 'bg-yellow-500 text-white shadow-md' 
                       : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                   }`}
                 >
-                  In Progress
+                  Pending
                 </button>
+
                 <button 
                   onClick={() => setFilter('completed')}
                   className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all ${
@@ -280,9 +212,10 @@ function Tasks() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                 {filteredTasks.map((task) => (
-                  <div 
-                    key={task.id}
-                    className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group cursor-pointer border border-gray-100"
+                  <Link
+                    key={task._id || task.id}
+                    to={`/task/${task._id || task.id}`}
+                    className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group cursor-pointer border border-gray-100 block"
                   >
                     {/* Card Header */}
                     <div className="p-6">
@@ -308,64 +241,71 @@ function Tasks() {
                         {task.description}
                       </p>
 
-                      {/* Progress Bar */}
-                      <div className="mb-6">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-semibold text-gray-700">Progress</span>
-                          <span className="text-sm font-bold text-gray-900">{task.progress}%</span>
+                      {/* Team Name */}
+                      {task.teamName && (
+                        <div className="mb-4">
+                          <p className="text-xs text-gray-500">Team</p>
+                          <p className="text-sm font-semibold text-gray-900">{task.teamName}</p>
                         </div>
-                        <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                          <div 
-                            className="bg-gradient-to-r from-primary to-[#667eea] h-2.5 rounded-full transition-all duration-500"
-                            style={{ width: `${task.progress}%` }}
-                          ></div>
-                        </div>
-                      </div>
+                      )}
 
                       {/* Footer */}
                       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center">
-                            <span className="text-white font-bold text-xs">
-                              {task.assignedTo.split(' ').map(n => n[0]).join('')}
-                            </span>
-                          </div>
-                          <div>
-                            <p className="text-sm font-semibold text-gray-900">{task.assignedTo}</p>
-                            <p className="text-xs text-gray-500">Assigned</p>
-                          </div>
+                          {task.members && task.members.length > 0 ? (
+                            <>
+                              <div className="flex -space-x-2">
+                                {task.members.slice(0, 3).map((member, idx) => (
+                                  <div key={idx} className="w-9 h-9 rounded-full bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center border-2 border-white">
+                                    <span className="text-white font-bold text-xs">
+                                      {member.username ? member.username.substring(0, 2).toUpperCase() : 'TM'}
+                                    </span>
+                                  </div>
+                                ))}
+                                {task.members.length > 3 && (
+                                  <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center border-2 border-white">
+                                    <span className="text-gray-600 font-bold text-xs">+{task.members.length - 3}</span>
+                                  </div>
+                                )}
+                              </div>
+                              <div>
+                                <p className="text-sm font-semibold text-gray-900">{task.members.length} Member{task.members.length > 1 ? 's' : ''}</p>
+                                <p className="text-xs text-gray-500">Assigned</p>
+                              </div>
+                            </>
+                          ) : (
+                            <div>
+                              <p className="text-sm font-semibold text-gray-900">No members</p>
+                              <p className="text-xs text-gray-500">Unassigned</p>
+                            </div>
+                          )}
                         </div>
                         
                         <div className="text-right">
                           <p className="text-sm font-semibold text-gray-900">
-                            {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                            {task.endDate ? new Date(task.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No due date'}
                           </p>
                           <p className="text-xs text-gray-500">Due Date</p>
                         </div>
                       </div>
 
-                      {/* Tags */}
-                      <div className="flex gap-2 flex-wrap mt-4">
-                        {task.tags.map((tag, index) => (
-                          <span 
-                            key={index}
-                            className="px-3 py-1 bg-gray-50 rounded-md text-xs text-gray-700 font-medium"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+                      {/* Duration */}
+                      {task.duration && (
+                        <div className="mt-4 flex items-center gap-2">
+                          <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span className="text-xs text-gray-600">Duration: {task.duration} days</span>
+                        </div>
+                      )}
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
 
               {filteredTasks.length === 0 && (
                 <div className="text-center py-20">
-                  <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  <h3 className="text-lg font-semibold text-gray-700 mb-2">No tasks found</h3>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">No tasks found</h3>
                   <p className="text-gray-500">Try adjusting your search or filter criteria</p>
                 </div>
               )}

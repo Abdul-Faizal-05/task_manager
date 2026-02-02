@@ -1,9 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require('http');
+const socketIo = require('socket.io');
 require('dotenv').config();
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"]
+    }
+});
 
 // Middleware
 app.use(cors());
@@ -23,7 +32,10 @@ mongoose.connect(MONGODB_URI)
 
 // Routes
 const authRoutes = require('./routes/auth');
+const taskRoutes = require('./routes/tasks');
+
 app.use('/api/auth', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // Root route
 app.get('/', (req, res) => {
@@ -39,8 +51,50 @@ app.use((err, req, res, next) => {
     });
 });
 
+// Socket.io connection handling
+io.on('connection', (socket) => {
+    console.log('New client connected:', socket.id);
+
+    // Join a specific task room
+    socket.on('join-task', ({ taskId, user }) => {
+        socket.join(taskId);
+        console.log(`User ${user?.username} joined task ${taskId}`);
+
+        // Notify others in the room
+        socket.to(taskId).emit('user-joined', {
+            user: user?.username,
+            message: `${user?.username} joined the task`
+        });
+    });
+
+    // Leave task room
+    socket.on('leave-task', (taskId) => {
+        socket.leave(taskId);
+        console.log(`User left task ${taskId}`);
+    });
+
+    // Handle chat messages
+    socket.on('send-message', (message) => {
+        io.to(message.taskId).emit('receive-message', message);
+    });
+
+    // Handle drawing events
+    socket.on('drawing', (data) => {
+        socket.to(data.taskId).emit('draw', data);
+    });
+
+    // Handle canvas clear
+    socket.on('clear-canvas', (taskId) => {
+        socket.to(taskId).emit('clear-canvas');
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected:', socket.id);
+    });
+});
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
