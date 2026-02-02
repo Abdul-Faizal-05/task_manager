@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
+import { API_BASE_URL } from './config';
 
-const socket = io('http://localhost:5000');
+const socket = io(API_BASE_URL);
 
 function TaskDetail() {
   const { taskId } = useParams();
@@ -24,7 +25,7 @@ function TaskDetail() {
     // Fetch task details
     const fetchTask = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`);
+        const response = await fetch(`${API_BASE_URL}/api/tasks/${taskId}`);
         const data = await response.json();
         if (response.ok) {
           setTask(data.task);

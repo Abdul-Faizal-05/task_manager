@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from './src/config';
 
 function CreateTask() {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ function CreateTask() {
     useEffect(() => {
         const fetchEmployees = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/auth/users');
+                const response = await fetch(`${API_BASE_URL}/api/auth/users`);
                 const data = await response.json();
                 if (response.ok) {
                     setEmployees(data.users.filter(user => user.role === 'employee'));
@@ -122,7 +123,7 @@ function CreateTask() {
             };
 
             // Send to backend API
-            const response = await fetch('http://localhost:5000/api/tasks/create', {
+            const response = await fetch(`${API_BASE_URL}/api/tasks/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from './src/config';
 
 function Home2() {
     const [employees, setEmployees] = useState([]);
@@ -16,7 +17,7 @@ function Home2() {
         const fetchEmployees = async () => {
             try {
                 console.log('Fetching employees from API...');
-                const response = await fetch('http://localhost:5000/api/auth/users');
+                const response = await fetch(`${API_BASE_URL}/api/auth/users`);
                 console.log('Response status:', response.status);
                 const data = await response.json();
                 console.log('Response data:', data);
@@ -56,7 +57,7 @@ function Home2() {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/tasks/');
+                const response = await fetch(`${API_BASE_URL}/api/tasks/`);
                 const data = await response.json();
                 if (response.ok) {
                     setTasks(data.tasks);
