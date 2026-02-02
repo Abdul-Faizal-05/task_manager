@@ -20,7 +20,7 @@ router.post('/create', async (req, res) => {
             title,
             description,
             priority: priority || 'medium',
-            status: 'todo',
+            status: 'pending',
             startDate,
             endDate,
             duration,
@@ -53,13 +53,22 @@ router.post('/create', async (req, res) => {
     }
 });
 
+// Priority order for sorting (high = 1, medium = 2, low = 3)
+const priorityOrder = { 'high': 1, 'medium': 2, 'low': 3 };
+
 // Get all tasks
 router.get('/', async (req, res) => {
     try {
         const tasks = await Task.find()
             .populate('members', 'username email role')
-            .populate('createdBy', 'username email')
-            .sort({ createdAt: -1 });
+            .populate('createdBy', 'username email');
+
+        // Sort by priority (high to low) then by createdAt
+        tasks.sort((a, b) => {
+            const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+            if (priorityDiff !== 0) return priorityDiff;
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
 
         res.json({
             message: 'Tasks retrieved successfully',
@@ -174,8 +183,14 @@ router.delete('/:id', async (req, res) => {
 router.get('/member/:memberId', async (req, res) => {
     try {
         const tasks = await Task.find({ members: req.params.memberId })
-            .populate('members', 'username email role')
-            .sort({ createdAt: -1 });
+            .populate('members', 'username email role');
+
+        // Sort by priority (high to low) then by createdAt
+        tasks.sort((a, b) => {
+            const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+            if (priorityDiff !== 0) return priorityDiff;
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
 
         res.json({
             message: 'Tasks retrieved successfully',

@@ -60,13 +60,22 @@ function Tasks() {
     }
   };
 
-  const filteredTasks = tasks.filter(task => {
-    const matchesFilter = filter === 'all' || task.status === filter;
-    const matchesSearch = (task.title?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-      (task.description?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
-      (task.teamName?.toLowerCase() || '').includes(searchQuery.toLowerCase());
-    return matchesFilter && matchesSearch;
-  });
+  // Priority order for sorting (high = 1, medium = 2, low = 3)
+  const priorityOrder = { 'high': 1, 'medium': 2, 'low': 3 };
+
+  const filteredTasks = tasks
+    .filter(task => {
+      const matchesFilter = filter === 'all' || task.status === filter;
+      const matchesSearch = (task.title?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (task.description?.toLowerCase() || '').includes(searchQuery.toLowerCase()) ||
+        (task.teamName?.toLowerCase() || '').includes(searchQuery.toLowerCase());
+      return matchesFilter && matchesSearch;
+    })
+    .sort((a, b) => {
+      const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+      if (priorityDiff !== 0) return priorityDiff;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
 
   const getStatusIcon = (status) => {
     switch (status) {
