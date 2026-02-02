@@ -193,7 +193,7 @@ function Register() {
           </button>
 
           <p className="text-center text-gray-600 text-sm mt-2">
-            Already have an account? <a href="/login" className="text-primary no-underline font-semibold hover:underline">Login here</a>
+            Already have an account? <a href="/" className="text-primary no-underline font-semibold hover:underline">Login here</a>
           </p>
         </form>
       </div>
