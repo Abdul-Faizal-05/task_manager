@@ -1,9 +1,11 @@
+import Home from "./Home"
+
 function App() {
   
 
   return (
     <>
-      <h1>welcome to cit </h1>
+      <Home></Home>
     </>
   )
 }
